@@ -123,8 +123,18 @@ class ReportGenerator:
     ) -> Path:
         path = package_dir / "telco_aiops_report.html"
         metric_cards = "".join(f"<div class='card'><span>{key}</span><b>{value}</b></div>" for key, value in summary.items())
-        speed_preview = speedtest_df.head(12).to_html(index=False, border=0) if not speedtest_df.empty else "<p>尚無 Speedtest 資料。</p>"
-        tower_preview = tower_df.head(12).to_html(index=False, border=0) if not tower_df.empty else "<p>尚無基地台資料。</p>"
+        speed_preview = self._html_dataframe(
+            speedtest_df,
+            ["timestamp", "region", "scenario", "download_mbps", "upload_mbps", "ping_ms"],
+            rows=12,
+            empty_text="尚無 Speedtest 資料。",
+        )
+        tower_preview = self._html_dataframe(
+            tower_df,
+            ["cellId", "operator", "lat", "lon", "avgRange", "radio"],
+            rows=12,
+            empty_text="尚無基地台資料。",
+        )
         html = f"""<!doctype html>
 <html lang="zh-Hant-TW">
 <head>
@@ -141,7 +151,9 @@ body{{font-family:"Microsoft JhengHei","Noto Sans CJK TC",Arial,sans-serif;backg
 .card{{background:white;border:1px solid #dbe5f5;border-radius:8px;padding:16px}}
 .card span{{display:block;color:#64748b;font-size:13px;margin-bottom:6px}}
 .card b{{font-size:20px}}
-section{{background:white;border:1px solid #dbe5f5;border-radius:8px;padding:18px;margin-top:16px;overflow:auto}}
+section{{background:white;border:1px solid #dbe5f5;border-radius:8px;padding:18px;margin-top:16px}}
+.table-wrap{{overflow-x:auto;padding-bottom:6px}}
+.table-note{{display:none;color:#64748b;font-size:12px;margin:0 0 8px}}
 table{{width:100%;border-collapse:collapse;font-size:13px}}
 th,td{{border-bottom:1px solid #e2e8f0;padding:8px;text-align:left;white-space:nowrap}}
 @media (max-width: 640px){{
@@ -151,8 +163,10 @@ body{{padding:16px}}
 .grid{{grid-template-columns:1fr}}
 .card{{padding:18px}}
 .card b{{font-size:22px}}
-section{{padding:16px}}
-table{{font-size:12px;min-width:720px}}
+section{{padding:16px;margin-top:14px}}
+.table-note{{display:block}}
+table{{font-size:12px;min-width:560px}}
+th,td{{padding:9px 10px}}
 }}
 </style>
 </head>
@@ -167,6 +181,14 @@ table{{font-size:12px;min-width:720px}}
 </html>"""
         path.write_text(html, encoding="utf-8")
         return path
+
+    def _html_dataframe(self, df: pd.DataFrame, columns: list[str], rows: int, empty_text: str) -> str:
+        if df.empty:
+            return f"<p>{empty_text}</p>"
+        available_columns = [column for column in columns if column in df.columns]
+        preview = df[available_columns].head(rows).copy()
+        table = preview.to_html(index=False, border=0)
+        return f"<p class='table-note'>表格可左右滑動查看欄位；完整資料請下載 CSV。</p><div class='table-wrap'>{table}</div>"
 
     def _write_pdf_report(
         self,
