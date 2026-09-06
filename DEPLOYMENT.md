@@ -210,7 +210,7 @@ Main file path: app.py
 | Repository | `<your-account>/telco-aiops-simulation-platform` |
 | Branch | `main` |
 | Main file path | `app.py` |
-| Python version | `runtime.txt` 已指定 `python-3.12.4` |
+| Python version | `runtime.txt` 已指定 `python-3.12` |
 
 設定完成後按 `Deploy`。
 
@@ -249,10 +249,10 @@ telco_aiops_simulation_platform/app.py
 如果 log 顯示 Streamlit Cloud 使用 Python `3.14.x`，請先確認 GitHub 上的 `runtime.txt` 內容是：
 
 ```text
-python-3.12.4
+python-3.12
 ```
 
-接著到 Streamlit App 管理頁重新部署或重啟 App。這個專案建議使用 Python 3.12，避免 `pillow`、`pandas`、`scikit-learn` 等套件在過新的 Python 版本上改走原始碼編譯。
+接著到 Streamlit App 管理頁重新部署或重啟 App。若平台仍使用 Python 3.14，新版 `requirements.txt` 已放寬到相容版本，避免舊版 Streamlit / Pillow / pandas / scikit-learn 解析或編譯失敗。
 
 #### 地圖或資料一開始是空的
 

@@ -111,10 +111,10 @@ git push -u origin main
 部署時請確認 GitHub 上有 `runtime.txt`，內容為：
 
 ```text
-python-3.12.4
+python-3.12
 ```
 
-如果 Streamlit Cloud log 顯示 Python `3.14.x` 並在安裝 `pillow` 時失敗，通常代表部署環境沒有讀到 `runtime.txt` 或尚未重新部署。
+如果 Streamlit Cloud log 顯示 Python `3.14.x`，新版 `requirements.txt` 也已調整成相容範圍，避免舊版 Streamlit / Pillow / pandas 在過新的 Python 版本上解析失敗。
 
 如果之後有更新程式或文件：
 

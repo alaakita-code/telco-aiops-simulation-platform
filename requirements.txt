@@ -3,41 +3,41 @@
 # ===========================================
 
 # Streamlit 核心
-streamlit==1.38.0
-streamlit-folium>=0.22.0,<0.25.0
+streamlit>=1.49.0,<2.0.0
+streamlit-folium>=0.25.0,<0.26.0
 
 # 數據處理
-pandas==2.2.3
-numpy==2.1.1
+pandas>=2.3.0,<3.0.0
+numpy>=2.2.0,<3.0.0
 
 # 地理資訊與地圖
-folium==0.18.0
-geopy==2.4.1
+folium>=0.19.0,<0.21.0
+geopy>=2.4.1,<3.0.0
 
 # 可視化
-plotly==5.24.1
-reportlab==4.2.5
-pillow>=11.0.0,<12.0.0
+plotly>=5.24.1,<7.0.0
+reportlab>=4.2.5,<5.0.0
+pillow>=11.0.0,<13.0.0
 
 # API 整合
-requests==2.32.3
+requests>=2.32.3,<3.0.0
 
 # 資料庫
 
 # 機器學習
-scikit-learn==1.5.2
+scikit-learn>=1.7.0,<2.0.0
 
 # 網路工具
-speedtest-cli==2.1.3
+speedtest-cli>=2.1.3,<3.0.0
 
 # 數據工程
 # 本 Demo 使用 pandas + SQLite 標準函式庫完成 ETL 與儲存。
 
 # 認證與安全
-python-dotenv==1.0.1
+python-dotenv>=1.0.1,<2.0.0
 
 # 測試
-pytest==8.3.3
+pytest>=8.3.3,<9.0.0
 # pytest-asyncio==0.24.0
 
 # 程式碼品質
@@ -46,10 +46,10 @@ pytest==8.3.3
 # mypy==1.11.2
 
 # 日誌與監控
-loguru==0.7.2
+loguru>=0.7.2,<1.0.0
 # sentry-sdk==2.14.0
 
 # 其他工具
-python-dateutil==2.9.0
-pytz==2024.2
-tqdm==4.66.5
+python-dateutil>=2.9.0,<3.0.0
+pytz>=2024.2
+tqdm>=4.66.5,<5.0.0
