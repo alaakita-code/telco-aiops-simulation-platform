@@ -17,6 +17,7 @@ geopy==2.4.1
 # 可視化
 plotly==5.24.1
 reportlab==4.2.5
+pillow>=11.0.0,<12.0.0
 
 # API 整合
 requests==2.32.3
