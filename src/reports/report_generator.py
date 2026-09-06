@@ -132,9 +132,11 @@ class ReportGenerator:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>電信網路模擬數據分析報告</title>
 <style>
-body{{font-family:"Microsoft JhengHei",Arial,sans-serif;background:#f4f7fb;color:#102033;margin:0;padding:32px}}
+body{{font-family:"Microsoft JhengHei","Noto Sans CJK TC",Arial,sans-serif;background:#f4f7fb;color:#102033;margin:0;padding:32px}}
 .wrap{{max-width:1100px;margin:auto}}
 .hero{{background:linear-gradient(135deg,#0f766e,#2563eb,#7c3aed);color:white;border-radius:8px;padding:24px;margin-bottom:20px}}
+.hero h1{{margin:0 0 12px;font-size:32px;line-height:1.25}}
+.hero p{{margin:0;font-size:16px;line-height:1.6}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}}
 .card{{background:white;border:1px solid #dbe5f5;border-radius:8px;padding:16px}}
 .card span{{display:block;color:#64748b;font-size:13px;margin-bottom:6px}}
@@ -142,6 +144,16 @@ body{{font-family:"Microsoft JhengHei",Arial,sans-serif;background:#f4f7fb;color
 section{{background:white;border:1px solid #dbe5f5;border-radius:8px;padding:18px;margin-top:16px;overflow:auto}}
 table{{width:100%;border-collapse:collapse;font-size:13px}}
 th,td{{border-bottom:1px solid #e2e8f0;padding:8px;text-align:left;white-space:nowrap}}
+@media (max-width: 640px){{
+body{{padding:16px}}
+.hero{{padding:20px}}
+.hero h1{{font-size:28px}}
+.grid{{grid-template-columns:1fr}}
+.card{{padding:18px}}
+.card b{{font-size:22px}}
+section{{padding:16px}}
+table{{font-size:12px;min-width:720px}}
+}}
 </style>
 </head>
 <body>
@@ -167,8 +179,6 @@ th,td{{border-bottom:1px solid #e2e8f0;padding:8px;text-align:left;white-space:n
         from reportlab.lib.pagesizes import A4
         from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
         from reportlab.lib.units import mm
-        from reportlab.pdfbase import pdfmetrics
-        from reportlab.pdfbase.ttfonts import TTFont
         from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
         path = package_dir / "telco_aiops_report.pdf"
@@ -245,19 +255,29 @@ th,td{{border-bottom:1px solid #e2e8f0;padding:8px;text-align:left;white-space:n
 
     def _register_pdf_font(self) -> str:
         from reportlab.pdfbase import pdfmetrics
+        from reportlab.pdfbase.cidfonts import UnicodeCIDFont
         from reportlab.pdfbase.ttfonts import TTFont
 
         font_candidates = [
             "C:/Windows/Fonts/msjh.ttc",
             "C:/Windows/Fonts/mingliu.ttc",
+            "/System/Library/Fonts/PingFang.ttc",
             "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/opentype/noto/NotoSansCJKtc-Regular.otf",
+            "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/truetype/arphic/uming.ttc",
             "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
         ]
         for font_path in font_candidates:
             if Path(font_path).exists():
-                pdfmetrics.registerFont(TTFont("ReportChinese", font_path))
-                return "ReportChinese"
-        return "Helvetica"
+                try:
+                    pdfmetrics.registerFont(TTFont("ReportChinese", font_path))
+                    return "ReportChinese"
+                except Exception as exc:
+                    logger.warning("PDF 字型註冊失敗，嘗試下一個字型：%s (%s)", font_path, exc)
+
+        pdfmetrics.registerFont(UnicodeCIDFont("STSong-Light"))
+        return "STSong-Light"
 
     def _pdf_table(self, rows: list, font_name: str) -> "Table":
         from reportlab.lib import colors
