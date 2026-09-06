@@ -1,6 +1,5 @@
 """Telco AIOps Simulation Platform."""
 
-import base64
 from pathlib import Path
 
 import pandas as pd
@@ -814,7 +813,7 @@ def show_data_management() -> None:
             ("📤", "上傳", "拖曳 Speedtest 或基地台 CSV。"),
             ("🔍", "辨識", "依欄位判斷資料類型。"),
             ("🧼", "清洗", "套用型別轉換與匿名化。"),
-            ("📦", "報表", "自動產出 CSV、HTML、Markdown 與 ZIP。"),
+            ("📦", "報表", "自動產出 CSV、HTML、Markdown、PDF 與 ZIP。"),
         ]
     )
     uploaded_file = st.file_uploader("上傳 CSV 檔案", type=["csv"])
@@ -837,18 +836,31 @@ def show_data_management() -> None:
         files = ReportGenerator().generate_report_package(data)
         zip_path = files["zip"]
         pdf_path = files["pdf_report"]
+        html_path = files["html_report"]
+        markdown_path = files["markdown_report"]
         st.success(f"已產出報表包：{zip_path.name}")
-        st.markdown('<div class="section-title">PDF 報表預覽</div>', unsafe_allow_html=True)
-        pdf_base64 = base64.b64encode(pdf_path.read_bytes()).decode("utf-8")
-        st.markdown(
-            f'<iframe src="data:application/pdf;base64,{pdf_base64}" width="100%" height="620" style="border:1px solid #dbe5f5;border-radius:8px;background:#fff;"></iframe>',
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="section-title">HTML 報表預覽</div>', unsafe_allow_html=True)
+        st.components.v1.html(html_path.read_text(encoding="utf-8"), height=620, scrolling=True)
+        with st.expander("📝 Markdown 報告預覽", expanded=False):
+            st.markdown(markdown_path.read_text(encoding="utf-8"))
+        st.info("PDF 在部分雲端瀏覽器會被內嵌預覽封鎖，請使用下方按鈕下載 PDF 檢視。")
         st.download_button(
             "下載 PDF 報表",
             data=pdf_path.read_bytes(),
             file_name=pdf_path.name,
             mime="application/pdf",
+        )
+        st.download_button(
+            "下載 HTML 報表",
+            data=html_path.read_bytes(),
+            file_name=html_path.name,
+            mime="text/html",
+        )
+        st.download_button(
+            "下載 Markdown 報告",
+            data=markdown_path.read_bytes(),
+            file_name=markdown_path.name,
+            mime="text/markdown",
         )
         st.download_button(
             "下載完整報表包 ZIP",
