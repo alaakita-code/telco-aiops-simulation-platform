@@ -6,10 +6,10 @@
 
 ### 1. 確認專案位置
 
-在 PowerShell 進入專案資料夾：
+在 PowerShell 先進入解壓縮後的上一層資料夾，再進入專案資料夾：
 
 ```powershell
-cd Desktop\telco_aiops_simulation_platform
+cd telco_aiops_simulation_platform
 ```
 
 確認目前資料夾內有這些重要檔案：
@@ -92,8 +92,10 @@ git remote add origin https://github.com/wingsfree/telco-aiops-simulation-platfo
 - `requirements.txt`
 - `README.md`
 - `DEPLOYMENT.md`
+- `.github/workflows/ci.yml`
 - `.streamlit/config.toml`
 - `src/`
+- `tests/`
 - `data/sample/`
 
 GitHub 頁面不應該看到：
@@ -102,7 +104,26 @@ GitHub 頁面不應該看到：
 - `data/processed/telco_data.db`
 - `data/exports/telco_aiops_report_*.zip`
 
-### 6. 後續更新專案
+### 6. 確認 GitHub Actions 測試
+
+推送完成後，GitHub 會自動執行 `.github/workflows/ci.yml`。
+
+確認方式：
+
+1. 進入 GitHub Repository。
+2. 點上方 `Actions`。
+3. 選擇最新一筆 `Python CI`。
+4. 確認流程顯示綠色勾勾。
+
+GitHub Actions 會執行：
+
+- 安裝 `requirements.txt`
+- 編譯核心 Python 檔案
+- 執行 `pytest -q`
+
+若 Actions 失敗，先點進失敗步驟查看錯誤訊息。常見原因通常是套件版本、Python 版本或缺少必要檔案。
+
+### 7. 後續更新專案
 
 之後每次修改完程式或文件，可以照這個流程更新 GitHub：
 
@@ -119,7 +140,7 @@ git push
 git commit -m "Add deployment instructions"
 ```
 
-### 7. 常見 GitHub 推送問題
+### 8. 常見 GitHub 推送問題
 
 #### `fatal: remote origin already exists`
 

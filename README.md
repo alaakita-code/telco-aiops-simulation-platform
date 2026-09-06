@@ -60,6 +60,22 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+## 測試與 CI
+
+本專案已加入 pytest 單元測試與 GitHub Actions。測試涵蓋模擬資料產生、資料品質檢查、趨勢預測，以及 Markdown / HTML / PDF / ZIP 報表輸出。
+
+本機可執行：
+
+```powershell
+pytest -q
+```
+
+推送到 GitHub 後，`.github/workflows/ci.yml` 會自動執行：
+
+- 安裝 `requirements.txt`
+- 編譯核心 Python 檔案
+- 執行 pytest 測試
+
 ## 趨勢預測模型
 
 為了讓本機與 Streamlit Cloud 更穩定，「趨勢預測」頁預設使用 scikit-learn 的 LinearRegression。這個 Demo 不需要安裝 Prophet，也不會依賴 Stan 後端。
@@ -69,10 +85,10 @@ streamlit run app.py
 完整步驟可看 `DEPLOYMENT.md`。摘要流程如下：
 
 1. 到 GitHub 建立空的 repository，名稱可用 `telco-aiops-simulation-platform`。
-2. 本機進入專案資料夾：
+2. 本機先進入解壓縮後的上一層資料夾，再進入專案資料夾：
 
 ```powershell
-cd Desktop\telco_aiops_simulation_platform
+cd telco_aiops_simulation_platform
 ```
 
 3. 初始化 Git、提交並推送：
@@ -128,3 +144,14 @@ git push
 - `telco_aiops_report.pdf`：可預覽與下載的 PDF 報告。
 - `speedtest_export.csv`：Speedtest 匯出資料。
 - `cell_towers_export.csv`：基地台匯出資料。
+
+也可以在程式中直接呼叫：
+
+```python
+from src.reports import ReportGenerator
+
+files = ReportGenerator().generate_report_package({
+    "speedtest": speedtest_df,
+    "cell_towers": tower_df,
+})
+```
