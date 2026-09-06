@@ -348,7 +348,7 @@ def inject_design() -> None:
         }
         .small-card-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(var(--card-cols, 4), minmax(0, 1fr));
             gap: .75rem;
             margin: .85rem 0 1.1rem;
             align-items: stretch;
@@ -369,11 +369,14 @@ def inject_design() -> None:
             display: block;
             color: #0f172a;
             margin-bottom: .25rem;
+            overflow-wrap: anywhere;
         }
         .small-card span {
             color: #64748b;
             font-size: .88rem;
             line-height: 1.45;
+            overflow-wrap: anywhere;
+            word-break: normal;
         }
         .quality-pass {
             border-left: 5px solid #10b981;
@@ -402,15 +405,70 @@ def inject_design() -> None:
             .card-grid,
             .flow,
             .metric-grid,
-            .status-grid,
-            .small-card-grid {
+            .status-grid {
                 grid-template-columns: 1fr;
+            }
+            .small-card-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
             }
             .hero {
                 padding: 1.2rem;
             }
             .hero h1 {
                 font-size: 1.55rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .block-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .page-head {
+                grid-template-columns: 44px 1fr;
+                gap: .8rem;
+                padding: 1rem;
+            }
+            .page-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 1.35rem;
+            }
+            .page-head h1 {
+                font-size: 1.5rem;
+                line-height: 1.25;
+            }
+            .page-head p {
+                font-size: .98rem;
+                line-height: 1.55;
+            }
+            .small-card-grid {
+                grid-template-columns: 1fr !important;
+                gap: .65rem;
+            }
+            .small-card {
+                display: grid;
+                grid-template-columns: 36px 1fr;
+                column-gap: .75rem;
+                align-items: start;
+                min-height: 0;
+                padding: .85rem;
+            }
+            .small-card .icon {
+                margin-bottom: 0;
+                line-height: 1.2;
+            }
+            .small-card b {
+                font-size: 1rem;
+                line-height: 1.35;
+            }
+            .small-card span {
+                grid-column: 2;
+                font-size: .86rem;
+                line-height: 1.55;
+            }
+            div[data-testid="stDataFrame"],
+            div[data-testid="stTable"] {
+                overflow-x: auto;
             }
         }
         </style>
@@ -432,7 +490,7 @@ def icon_cards(cards: list[tuple[str, str, str]], columns: int = 4) -> None:
         f'<div class="small-card"><div class="icon">{icon}</div><b>{title}</b><span>{body}</span></div>'
         for icon, title, body in cards
     )
-    st.markdown(f'<div class="small-card-grid" style="grid-template-columns: repeat({columns}, minmax(0, 1fr));">{html}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="small-card-grid" style="--card-cols: {columns};">{html}</div>', unsafe_allow_html=True)
 
 
 def quality_cards(title: str, rules: pd.DataFrame) -> None:
