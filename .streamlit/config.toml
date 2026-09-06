@@ -6,5 +6,5 @@ secondaryBackgroundColor = "#ffffff"
 textColor = "#0f172a"
 
 [server]
-headless = false
+headless = true
 enableXsrfProtection = true

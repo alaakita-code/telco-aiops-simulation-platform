@@ -648,7 +648,7 @@ def show_overview() -> None:
 
     if not speedtest_df.empty:
         st.markdown('<div class="section-title">速度趨勢快照</div>', unsafe_allow_html=True)
-        st.plotly_chart(compact_plotly(InteractiveCharts.create_speedtest_timeline(speedtest_df), 390), use_container_width=True)
+        st.plotly_chart(compact_plotly(InteractiveCharts.create_speedtest_timeline(speedtest_df), 390), width="stretch")
 
 
 def show_simulator() -> None:
@@ -685,9 +685,9 @@ def show_simulator() -> None:
 
     st.markdown('<div class="section-title">資料預覽</div>', unsafe_allow_html=True)
     with st.expander("📶 Speedtest 預覽", expanded=True):
-        st.dataframe(generate_speedtest(rows=min(rows, 20), region=region, scenario=scenario), use_container_width=True, hide_index=True, height=300)
+        st.dataframe(generate_speedtest(rows=min(rows, 20), region=region, scenario=scenario), width="stretch", hide_index=True, height=300)
     with st.expander("🗼 基地台預覽", expanded=False):
-        st.dataframe(generate_cell_towers(rows=20, region=region), use_container_width=True, hide_index=True, height=300)
+        st.dataframe(generate_cell_towers(rows=20, region=region), width="stretch", hide_index=True, height=300)
 
 
 def show_cell_tower_map() -> None:
@@ -719,9 +719,9 @@ def show_cell_tower_map() -> None:
     st_folium(MapCharts.add_heatmap(folium_map, df), height=470, use_container_width=True, returned_objects=[])
 
     st.markdown('<div class="section-title">模擬業者基地台數量分布</div>', unsafe_allow_html=True)
-    st.plotly_chart(compact_plotly(MapCharts.create_operator_distribution(df), 360), use_container_width=True)
+    st.plotly_chart(compact_plotly(MapCharts.create_operator_distribution(df), 360), width="stretch")
     with st.expander("查看基地台資料"):
-        st.dataframe(df, use_container_width=True, hide_index=True, height=320)
+        st.dataframe(df, width="stretch", hide_index=True, height=320)
 
 
 def show_speedtest_analysis() -> None:
@@ -743,10 +743,10 @@ def show_speedtest_analysis() -> None:
     cols[3].metric("🧾 測試次數", len(df))
 
     st.markdown('<div class="section-title">網路速度趨勢</div>', unsafe_allow_html=True)
-    st.plotly_chart(compact_plotly(InteractiveCharts.create_speedtest_timeline(df), 410), use_container_width=True)
+    st.plotly_chart(compact_plotly(InteractiveCharts.create_speedtest_timeline(df), 410), width="stretch")
     st.markdown('<div class="section-title">速度分布與時段型態</div>', unsafe_allow_html=True)
-    st.plotly_chart(compact_plotly(InteractiveCharts.create_speedtest_distribution(df), 380), use_container_width=True)
-    st.plotly_chart(compact_plotly(InteractiveCharts.create_hourly_pattern(df), 380), use_container_width=True)
+    st.plotly_chart(compact_plotly(InteractiveCharts.create_speedtest_distribution(df), 380), width="stretch")
+    st.plotly_chart(compact_plotly(InteractiveCharts.create_hourly_pattern(df), 380), width="stretch")
 
 
 def show_aiops_center() -> None:
@@ -785,7 +785,7 @@ def show_aiops_center() -> None:
         st.success("目前未偵測到明顯異常。")
     else:
         with st.expander(f"🔎 查看 {len(anomalies)} 筆異常資料", expanded=True):
-            st.dataframe(anomalies, use_container_width=True, hide_index=True, height=180)
+            st.dataframe(anomalies, width="stretch", hide_index=True, height=180)
 
     fig = px.scatter(
         detected,
@@ -795,7 +795,7 @@ def show_aiops_center() -> None:
         size="anomaly_score",
         title="AIOps 異常偵測結果",
     )
-    st.plotly_chart(compact_plotly(fig, 430), use_container_width=True)
+    st.plotly_chart(compact_plotly(fig, 430), width="stretch")
 
 
 def show_trend_prediction() -> None:
@@ -836,7 +836,7 @@ def show_trend_prediction() -> None:
     fig.add_trace(go.Scatter(x=df["timestamp"], y=df["download_mbps"], mode="lines", name="實際值"))
     fig.add_trace(go.Scatter(x=forecast["ds"], y=forecast["yhat"], mode="lines", name="預測值"))
     fig.update_layout(title="未來 7 天下載速度預測", xaxis_title="時間", yaxis_title="Mbps")
-    st.plotly_chart(compact_plotly(fig, 430), use_container_width=True)
+    st.plotly_chart(compact_plotly(fig, 430), width="stretch")
 
 
 def show_data_quality() -> None:
@@ -852,11 +852,11 @@ def show_data_quality() -> None:
     tower_rules = checker.to_dataframe(checker.check_cell_towers(load_cell_towers()))
     quality_cards("📶 Speedtest 品質", speed_rules)
     with st.expander("查看 Speedtest 品質明細"):
-        st.dataframe(speed_rules, use_container_width=True, hide_index=True, height=220)
+        st.dataframe(speed_rules, width="stretch", hide_index=True, height=220)
 
     quality_cards("🗼 基地台品質", tower_rules)
     with st.expander("查看基地台品質明細"):
-        st.dataframe(tower_rules, use_container_width=True, hide_index=True, height=220)
+        st.dataframe(tower_rules, width="stretch", hide_index=True, height=220)
 
 
 def show_data_management() -> None:
@@ -880,7 +880,7 @@ def show_data_management() -> None:
         df = pd.read_csv(uploaded_file)
         st.success(f"已讀取 {len(df)} 筆資料，辨識為：{detect_uploaded_data_type(df)}")
         with st.expander("📄 查看上傳資料前 30 筆", expanded=True):
-            st.dataframe(df.head(30), use_container_width=True, hide_index=True, height=340)
+            st.dataframe(df.head(30), width="stretch", hide_index=True, height=340)
 
         if st.button("清洗並寫入資料庫", type="primary"):
             data_label, raw_path, table_name = save_uploaded_data(df)
